@@ -1,11 +1,9 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using prs_server.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using prs_server.Models;
 
 namespace prs_server.Controllers
 {
@@ -18,6 +16,19 @@ namespace prs_server.Controllers
         public RequestLinesController(PrsContext context)
         {
             _context = context;
+        }
+
+        private async void RecalculateRequestTotal(int requestId)
+        {
+            var request = await _context.Requests.FindAsync(requestId);
+
+            request.Total = (from r in _context.RequestLines
+                             join p in _context.Products
+                             on r.ProductId equals p.Id
+                             where r.ProductId == p.Id
+                             select new { LineTotal = r.Quantity * p.Price })
+                            .Sum(x => x.LineTotal);
+            await _context.SaveChangesAsync();
         }
 
         // GET: api/RequestLines
@@ -56,6 +67,7 @@ namespace prs_server.Controllers
             try
             {
                 await _context.SaveChangesAsync();
+                RecalculateRequestTotal(requestLine.Id);
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -79,6 +91,7 @@ namespace prs_server.Controllers
         {
             _context.RequestLines.Add(requestLine);
             await _context.SaveChangesAsync();
+            RecalculateRequestTotal(requestLine.Id);
 
             return CreatedAtAction("GetRequestLine", new { id = requestLine.Id }, requestLine);
         }
@@ -95,6 +108,7 @@ namespace prs_server.Controllers
 
             _context.RequestLines.Remove(requestLine);
             await _context.SaveChangesAsync();
+            RecalculateRequestTotal(requestLine.Id);
 
             return NoContent();
         }

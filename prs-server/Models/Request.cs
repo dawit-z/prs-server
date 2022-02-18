@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -20,10 +21,10 @@ namespace prs_server.Models
         [Required, MaxLength(20)]
         public string DeliveryMode { get; set; } = "Pickup";
 
-        [Required, MaxLength(10)]
+        [Required, MaxLength(10), ReadOnly(true)]
         public string Status { get; set; } = "NEW";
 
-        [Required, Column(TypeName = "decimal(11,2)")]
+        [Required, Column(TypeName = "decimal(11,2)"), ReadOnly(true)]
         public decimal Total { get; set; } = 0;
 
         public int UserId { get; set; }

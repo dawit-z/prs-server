@@ -20,6 +20,15 @@ namespace prs_server.Controllers
             _context = context;
         }
 
+        // GET api/Requests/review/id
+        [HttpGet("review/{id}")]
+
+        public async Task<ActionResult<IEnumerable<Request>>> GetReviews(int userId)
+        {
+            return await _context.Requests.Where(x => x.Status == "REVIEW" && x.UserId != userId ).ToListAsync();
+        }
+
+
         // PUT: api/Requests/5/review
         [HttpPut("{id}/review")]
         public async Task<IActionResult> Review(Request request)
