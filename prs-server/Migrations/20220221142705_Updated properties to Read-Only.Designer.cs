@@ -2,15 +2,17 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using prs_server.Models;
 
 namespace prs_server.Migrations
 {
     [DbContext(typeof(PrsContext))]
-    partial class PrsContextModelSnapshot : ModelSnapshot
+    [Migration("20220221142705_Updated properties to Read-Only")]
+    partial class UpdatedpropertiestoReadOnly
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

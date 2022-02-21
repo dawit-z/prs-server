@@ -18,7 +18,7 @@ namespace prs_server.Controllers
             _context = context;
         }
 
-        private async void RecalculateRequestTotal(int requestId)
+        private async Task RecalculateRequestTotal(int requestId)
         {
             var request = await _context.Requests.FindAsync(requestId);
 
@@ -67,7 +67,7 @@ namespace prs_server.Controllers
             try
             {
                 await _context.SaveChangesAsync();
-                RecalculateRequestTotal(requestLine.Id);
+                await RecalculateRequestTotal(requestLine.Id);
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -91,7 +91,7 @@ namespace prs_server.Controllers
         {
             _context.RequestLines.Add(requestLine);
             await _context.SaveChangesAsync();
-            RecalculateRequestTotal(requestLine.Id);
+            await RecalculateRequestTotal(requestLine.Id);
 
             return CreatedAtAction("GetRequestLine", new { id = requestLine.Id }, requestLine);
         }
@@ -108,7 +108,7 @@ namespace prs_server.Controllers
 
             _context.RequestLines.Remove(requestLine);
             await _context.SaveChangesAsync();
-            RecalculateRequestTotal(requestLine.Id);
+            await RecalculateRequestTotal (requestLine.Id);
 
             return NoContent();
         }

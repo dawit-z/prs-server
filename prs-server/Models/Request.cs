@@ -21,15 +21,15 @@ namespace prs_server.Models
         [Required, MaxLength(20)]
         public string DeliveryMode { get; set; } = "Pickup";
 
-        [Required, MaxLength(10), ReadOnly(true)]
+        [Required, MaxLength(10),]
         public string Status { get; set; } = "NEW";
 
-        [Required, Column(TypeName = "decimal(11,2)"), ReadOnly(true)]
+        [Required, Column(TypeName = "decimal(11,2)")]
         public decimal Total { get; set; } = 0;
 
         public int UserId { get; set; }
         public virtual User User { get; set; }
 
-        public List<RequestLine> RequestLines = new List<RequestLine>();
+        public List<RequestLine> RequestLines = new();
     }
 }
