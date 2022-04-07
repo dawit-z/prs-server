@@ -32,18 +32,15 @@ namespace prs_server.Controllers
 
         // PUT: api/Requests/5/review
         [HttpPut("{id}/review")]
-        public async Task<IActionResult> Review(Request request)
+        public async Task<ActionResult<Request>> Review(Request request)
         {
-            if (request.Total > 50)
+            var req = await _context.Requests.FindAsync(request.Id);
+            if (req == null)
             {
-                request.Status = "REVIEW";  
+                return NotFound();
             }
-            else if (request.Total <= 50)
-            {
-                request.Status = "APPROVED";
-            }
-            await _context.SaveChangesAsync();
-            return NoContent();
+            req.Status = (req.Total <= 50) ? "APPROVED" : "REVIEW";
+            return request;
         }
 
 
@@ -71,14 +68,16 @@ namespace prs_server.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Request>>> GetRequests()
         {
-            return await _context.Requests.ToListAsync();
+            return await _context.Requests.Include(x => x.User).ToListAsync();
         }
 
         // GET: api/Requests/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Request>> GetRequest(int id)
         {
-            var request = await _context.Requests.FindAsync(id);
+            var request = await _context.Requests.Include(x => x.User)
+                                                 .Include(x => x.RequestLines)
+                                                 .SingleOrDefaultAsync(x => x.Id == id);
 
             if (request == null)
             {

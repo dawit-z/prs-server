@@ -108,8 +108,7 @@ namespace prs_server.Controllers
 
             _context.RequestLines.Remove(requestLine);
             await _context.SaveChangesAsync();
-            await RecalculateRequestTotal (requestLine.Id);
-
+            await RecalculateRequestTotal(requestLine.Id);
             return NoContent();
         }
 

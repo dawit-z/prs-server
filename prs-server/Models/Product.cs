@@ -13,11 +13,11 @@ namespace prs_server.Models
         [Required, MaxLength(30)]
         public string Name { get; set; }
 
-        [Required, Column(TypeName = "decimal(11,2)")]
+        [Column(TypeName = "decimal(11,2)")]
         public decimal Price { get; set; }
 
         [Required, MaxLength(30)]
-        public string Unit { get; set; }
+        public string Unit { get; set; } = "Each";
 
         [MaxLength(255)]
         public string PhotoPath { get; set; }
