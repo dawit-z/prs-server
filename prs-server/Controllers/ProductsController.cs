@@ -33,7 +33,7 @@ namespace prs_server.Controllers
         public async Task<ActionResult<Product>> GetProduct(int id)
         {
             var product = await _context.Products.Include(x => x.Vendor)
-                                                 .SingleOrDefaultAsync();    
+                                                 .SingleOrDefaultAsync(x => x.Id == id);    
 
             if (product == null)
             {
