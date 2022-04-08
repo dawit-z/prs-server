@@ -36,14 +36,12 @@ namespace prs_server.Controllers
             await _context.SaveChangesAsync();
         }
 
-        // GET: api/RequestLines
         [HttpGet]
         public async Task<ActionResult<IEnumerable<RequestLine>>> GetRequestLines()
         {
             return await _context.RequestLines.ToListAsync();
         }
 
-        // GET: api/RequestLines/5
         [HttpGet("{id}")]
         public async Task<ActionResult<RequestLine>> GetRequestLine(int id)
         {
@@ -57,10 +55,8 @@ namespace prs_server.Controllers
             return requestLine;
         }
 
-        // PUT: api/RequestLines/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutRequestLine(int id, RequestLine requestLine)
+        public async Task<IActionResult> Update(int id, RequestLine requestLine)
         {
             if (id != requestLine.Id)
             {
@@ -72,7 +68,7 @@ namespace prs_server.Controllers
             try
             {
                 await _context.SaveChangesAsync();
-                await RecalculateRequestTotal(requestLine.Id);
+                await RecalculateRequestTotal(requestLine.RequestId);
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -89,31 +85,27 @@ namespace prs_server.Controllers
             return NoContent();
         }
 
-        // POST: api/RequestLines
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<RequestLine>> PostRequestLine(RequestLine requestLine)
+        public async Task<ActionResult<RequestLine>> Create(RequestLine requestLine)
         {
             _context.RequestLines.Add(requestLine);
             await _context.SaveChangesAsync();
-            await RecalculateRequestTotal(requestLine.Id);
+            await RecalculateRequestTotal(requestLine.RequestId);
 
             return CreatedAtAction("GetRequestLine", new { id = requestLine.Id }, requestLine);
         }
 
-        // DELETE: api/RequestLines/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteRequestLine(int id)
+        public async Task<IActionResult> Remove(int id)
         {
             var requestLine = await _context.RequestLines.FindAsync(id);
             if (requestLine == null)
             {
                 return NotFound();
             }
-
             _context.RequestLines.Remove(requestLine);
             await _context.SaveChangesAsync();
-            await RecalculateRequestTotal(requestLine.Id);
+            await RecalculateRequestTotal(requestLine.RequestId);
             return NoContent();
         }
 

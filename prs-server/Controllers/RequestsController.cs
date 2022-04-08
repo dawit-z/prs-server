@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using prs_server.Models;
@@ -73,7 +71,7 @@ namespace prs_server.Controllers
 
         // GET: api/Requests/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Request>> GetRequest(int id)
+        public async Task<ActionResult<Request>> Get(int id)
         {
             var request = await _context.Requests.Include(x => x.User)
                                                  .Include(x => x.RequestLines)
@@ -90,7 +88,7 @@ namespace prs_server.Controllers
         // PUT: api/Requests/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutRequest(int id, Request request)
+        public async Task<IActionResult> Update(int id, Request request)
         {
             if (id != request.Id)
             {
@@ -121,7 +119,7 @@ namespace prs_server.Controllers
         // POST: api/Requests
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Request>> PostRequest(Request request)
+        public async Task<ActionResult<Request>> Create(Request request)
         {
             _context.Requests.Add(request);
             await _context.SaveChangesAsync();
@@ -131,7 +129,7 @@ namespace prs_server.Controllers
 
         // DELETE: api/Requests/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteRequest(int id)
+        public async Task<IActionResult> Remove(int id)
         {
             var request = await _context.Requests.FindAsync(id);
             if (request == null)
