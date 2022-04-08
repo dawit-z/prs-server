@@ -22,7 +22,7 @@ namespace prs_server.Controllers
 
 
         // GET api/Requests/review/id
-        [HttpGet("review/{id}")]
+        [HttpGet("reviews/{id}")]
 
         public async Task<ActionResult<IEnumerable<Request>>> GetReviews(int userId)
         {
@@ -31,7 +31,7 @@ namespace prs_server.Controllers
 
 
         // PUT: api/Requests/5/review
-        [HttpPut("{id}/review")]
+        [HttpPut("review/{id}")]
         public async Task<ActionResult<Request>> Review(Request request)
         {
             var req = await _context.Requests.FindAsync(request.Id);
@@ -45,7 +45,7 @@ namespace prs_server.Controllers
 
 
         // PUT: api/Requests/5/approve
-        [HttpPut("{id}/approve")]
+        [HttpPut("approve/{id}")]
         public async Task<IActionResult> Approve(Request request)
         {
             request.Status = "APPROVED";
@@ -55,7 +55,7 @@ namespace prs_server.Controllers
         }
 
         // PUT: api/Requests/5/reject
-        [HttpPut("{id}/reject")]
+        [HttpPut("reject/{id}")]
         public async Task<IActionResult> Reject(Request request)
         {
             request.Status = "REJECTED";

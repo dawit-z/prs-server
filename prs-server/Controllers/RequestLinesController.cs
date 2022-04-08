@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using prs_server.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -21,13 +22,17 @@ namespace prs_server.Controllers
         private async Task RecalculateRequestTotal(int requestId)
         {
             var request = await _context.Requests.FindAsync(requestId);
-
+            if (request == null)
+            {
+                throw new Exception("Invalid ID");
+            }
             request.Total = (from r in _context.RequestLines
                              join p in _context.Products
                              on r.ProductId equals p.Id
                              where r.ProductId == p.Id
                              select new { LineTotal = r.Quantity * p.Price })
                             .Sum(x => x.LineTotal);
+            request.Status = "EDIT";
             await _context.SaveChangesAsync();
         }
 
