@@ -24,13 +24,13 @@ namespace prs_server.Controllers
 
         public async Task<ActionResult<IEnumerable<Request>>> GetReviews(int userId)
         {
-            return await _context.Requests.Where(x => x.Status == "REVIEW" && x.UserId != userId ).ToListAsync();
+            return await _context.Requests.Include(x => x.User).Where(x => x.Status == "REVIEW" && x.UserId != userId ).ToListAsync();
         }
 
 
         // PUT: api/Requests/5/review
         [HttpPut("review/{id}")]
-        public async Task<ActionResult<Request>> Review(Request request)
+        public async Task<IActionResult> Review(int id, Request request)
         {
             var req = await _context.Requests.FindAsync(request.Id);
             if (req == null)
@@ -38,28 +38,24 @@ namespace prs_server.Controllers
                 return NotFound();
             }
             req.Status = (req.Total <= 50) ? "APPROVED" : "REVIEW";
-            return request;
+            return await Update(id, request);
         }
 
 
         // PUT: api/Requests/5/approve
         [HttpPut("approve/{id}")]
-        public async Task<IActionResult> Approve(Request request)
+        public async Task<IActionResult> Approve(int id, Request request)
         {
             request.Status = "APPROVED";
-            await _context.SaveChangesAsync();
-            return NoContent();
-           
+            return await Update(id, request);
         }
 
         // PUT: api/Requests/5/reject
         [HttpPut("reject/{id}")]
-        public async Task<IActionResult> Reject(Request request)
+        public async Task<IActionResult> Reject(int id, Request request)
         {
             request.Status = "REJECTED";
-            await _context.SaveChangesAsync();
-            return NoContent();
-
+            return await Update(id, request);
         }
 
         // GET: api/Requests
@@ -75,6 +71,7 @@ namespace prs_server.Controllers
         {
             var request = await _context.Requests.Include(x => x.User)
                                                  .Include(x => x.RequestLines)
+                                                 .ThenInclude(x => x.Product)
                                                  .SingleOrDefaultAsync(x => x.Id == id);
 
             if (request == null)

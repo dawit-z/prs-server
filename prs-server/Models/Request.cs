@@ -31,5 +31,7 @@ namespace prs_server.Models
         public virtual User User { get; set; }
 
         public List<RequestLine> RequestLines { get; set; } = new List<RequestLine>();
+
+        public Request() { }
     }
 }

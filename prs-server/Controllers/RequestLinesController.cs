@@ -32,7 +32,7 @@ namespace prs_server.Controllers
                              where r.ProductId == p.Id
                              select new { LineTotal = r.Quantity * p.Price })
                             .Sum(x => x.LineTotal);
-            request.Status = "EDIT";
+            request.Status = "UPDATED";
             await _context.SaveChangesAsync();
         }
 
