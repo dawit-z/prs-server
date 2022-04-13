@@ -20,11 +20,12 @@ namespace prs_server.Controllers
 
 
         // GET api/Requests/review/id
-        [HttpGet("reviews/{id}")]
+        [HttpGet("reviews/{userId}")]
 
         public async Task<ActionResult<IEnumerable<Request>>> GetReviews(int userId)
         {
-            return await _context.Requests.Include(x => x.User).Where(x => x.Status == "REVIEW" && x.UserId != userId ).ToListAsync();
+            return await _context.Requests.Include(x => x.User)
+                .Where(x => x.Status == "REVIEW" && x.UserId != userId ).ToListAsync();
         }
 
 
@@ -32,12 +33,7 @@ namespace prs_server.Controllers
         [HttpPut("review/{id}")]
         public async Task<IActionResult> Review(int id, Request request)
         {
-            var req = await _context.Requests.FindAsync(request.Id);
-            if (req == null)
-            {
-                return NotFound();
-            }
-            req.Status = (req.Total <= 50) ? "APPROVED" : "REVIEW";
+            request.Status = (request.Total <= 50) ? "APPROVED" : "REVIEW";
             return await Update(id, request);
         }
 
@@ -67,7 +63,7 @@ namespace prs_server.Controllers
 
         // GET: api/Requests/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Request>> Get(int id)
+        public async Task<ActionResult<Request>> GetRequest(int id)
         {
             var request = await _context.Requests.Include(x => x.User)
                                                  .Include(x => x.RequestLines)

@@ -9,16 +9,16 @@ namespace prs_server.Models
 
         [Required]
         public int RequestId { get; set; }
-
         [JsonIgnore]
         public virtual Request Request { get; set; }
 
         [Required]
         public int ProductId { get; set; }
-
         public virtual Product Product { get; set; }
 
         [Required]
         public int Quantity { get; set; } = 1;
+
+        public RequestLine() { }
     }
 }

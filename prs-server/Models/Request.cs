@@ -30,7 +30,7 @@ namespace prs_server.Models
         public int UserId { get; set; }
         public virtual User User { get; set; }
 
-        public List<RequestLine> RequestLines { get; set; } = new List<RequestLine>();
+        public virtual IEnumerable<RequestLine> RequestLines { get; set; }
 
         public Request() { }
     }

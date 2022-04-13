@@ -19,7 +19,7 @@ namespace prs_server.Controllers
             _context = context;
         }
 
-        private async Task RecalculateRequestTotal(int requestId)
+        private async Task <IActionResult> RecalculateRequestTotal(int requestId)
         {
             var request = await _context.Requests.FindAsync(requestId);
             if (request == null)
@@ -29,11 +29,13 @@ namespace prs_server.Controllers
             request.Total = (from r in _context.RequestLines
                              join p in _context.Products
                              on r.ProductId equals p.Id
-                             where r.ProductId == p.Id
+                             where r.RequestId == requestId
                              select new { LineTotal = r.Quantity * p.Price })
                             .Sum(x => x.LineTotal);
+
             request.Status = "UPDATED";
             await _context.SaveChangesAsync();
+            return Ok();
         }
 
         [HttpGet]
